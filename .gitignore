@@ -57,7 +57,7 @@ MANIFEST
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
-
+steps.txt
 # Unit test / coverage reports
 .tox/
 .nox/

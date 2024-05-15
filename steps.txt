@@ -1,0 +1,19 @@
+. In an empty folder create venv (python -m venv venv) and activate it.
+2. pip Install
+Django
+wagtail
+3. create a github account and git init,
+rename master to main by:
+ git branch -m master main
+and then add, commit and
+git remote add origin <link with account@>
+git push (and the error message will appear)
+
+steps from
+https://docs.wagtail.org/en/stable/getting_started/tutorial.html
+wagtail start wagtailweb .
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+
+
