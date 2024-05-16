@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+
+  db:
+    volumes:
+        - wagtailweb_postgres_data:/var/lib/postgresql/data/
+
+  web:
+    volumes:
+        - ./wagtailweb/wagtailweb:/app
+    ports:
+        - "8000:8000"
+
+volumes:
+    wagtailweb_postgres_data:
+        # external: true # can be set only in dev as it stores it on host machine

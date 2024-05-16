@@ -45,8 +45,19 @@ COPY --chown=wagtail:wagtail . .
 # Use user "wagtail" to run the build commands below and the server itself.
 USER wagtail
 
+# Make the shell script executable
+RUN chmod +x wait-for-it.sh
+
+# Run the shell script
+CMD ./wait-for-it.sh -t 0 db:5432
+
 # Collect static files.
 RUN python manage.py collectstatic --noinput --clear
+
+# Set environment variables for the superuser
+ENV DJANGO_SUPERUSER_USERNAME=admin
+ENV DJANGO_SUPERUSER_EMAIL=admin@example.com
+ENV DJANGO_SUPERUSER_PASSWORD=adminpassword
 
 # Runtime command that executes when "docker run" is called, it does the
 # following:
@@ -57,4 +68,7 @@ RUN python manage.py collectstatic --noinput --clear
 #   PRACTICE. The database should be migrated manually or using the release
 #   phase facilities of your hosting platform. This is used only so the
 #   Wagtail instance can be started with a simple "docker run" command.
-CMD set -xe; python manage.py migrate --noinput; gunicorn wagtailweb.wsgi:application
+CMD set -xe; \
+    python manage.py migrate --noinput; \
+    python manage.py createsuperuser --noinput --username $DJANGO_SUPERUSER_USERNAME --email $DJANGO_SUPERUSER_EMAIL || true; \
+    gunicorn wagtailweb.wsgi:application --bind 0.0.0.0:8000

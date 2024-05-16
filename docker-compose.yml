@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  db:
+    build: ./dbms
+    environment:
+        - POSTGRES_USER=${DB_POSTGRES_USER}
+        - POSTGRES_PASSWORD=${DB_POSTGRES_PASSWORD}
+        - POSTGRES_DB=${DB_POSTGRES_DB}
+    networks:
+        - db_network
+
+  web:
+    build: ./wagtailweb
+    depends_on:
+        - db
+    networks:
+        - db_network
+
+networks:
+  db_network:
+    driver: bridge

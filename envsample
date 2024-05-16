@@ -1,0 +1,3 @@
+DB_POSTGRES_USER=wagtailweb
+DB_POSTGRES_PASSWORD=wagtailweb1234
+DB_POSTGRES_DB=wagtailweb_db
