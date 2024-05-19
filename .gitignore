@@ -1,6 +1,6 @@
 .information
 .env
-.idea
+wagtailweb/.idea
 .idea/*
 .idea/misc.xml
 *.db
