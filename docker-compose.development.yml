@@ -7,7 +7,7 @@ services:
 
   web:
     volumes:
-        - ./wagtailweb/wagtailweb:/app
+        - ./wagtailweb:/app
     ports:
         - "8000:8000"
 
