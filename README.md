@@ -18,7 +18,7 @@ docker-compose -f docker-compose.development.yml -f docker-compose.yml build
 ### Start the containers
 
 ```bash
-docker-compose -f docker-compose.development.yml -f docker-compose.yml up
+docker-compose -f docker-compose.development.yml -f docker-compose.yml up -d
 ```
 
 ### Access the Admin panel.

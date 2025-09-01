@@ -1,5 +1,5 @@
-# Use an official Python runtime based on Debian 10 "buster" as a parent image.
-FROM python:3.8.1-slim-buster
+# Use an official Python runtime based on Debian 12 "bookworm" as a parent image.
+FROM python:3.10-slim-bookworm
 
 # Add user that will be used in the container.
 RUN useradd wagtail
@@ -16,9 +16,10 @@ ENV PYTHONUNBUFFERED=1 \
 
 # Install system packages required by Wagtail and Django.
 RUN apt-get update --yes --quiet && apt-get install --yes --quiet --no-install-recommends \
+    bash \
     build-essential \
     libpq-dev \
-    libmariadbclient-dev \
+    libmariadb-dev \
     libjpeg62-turbo-dev \
     zlib1g-dev \
     libwebp-dev \
@@ -46,10 +47,10 @@ COPY --chown=wagtail:wagtail . .
 USER wagtail
 
 # Make the shell script executable
-RUN chmod +x wait-for-it.sh
+RUN sed -i 's/\r$//' wait-for-it.sh && chmod +x wait-for-it.sh
 
 # Run the shell script
-CMD ./wait-for-it.sh -t 0 db:5432
+ENTRYPOINT ["./wait-for-it.sh","-t","120","db:5432","--"]
 
 # Collect static files.
 RUN python manage.py collectstatic --noinput --clear
@@ -68,7 +69,4 @@ ENV DJANGO_SUPERUSER_PASSWORD=adminpassword
 #   PRACTICE. The database should be migrated manually or using the release
 #   phase facilities of your hosting platform. This is used only so the
 #   Wagtail instance can be started with a simple "docker run" command.
-CMD set -xe; \
-    python manage.py migrate --noinput; \
-    python manage.py createsuperuser --noinput --username $DJANGO_SUPERUSER_USERNAME --email $DJANGO_SUPERUSER_EMAIL || true; \
-    gunicorn wagtailweb.wsgi:application --bind 0.0.0.0:8000
+CMD ["sh","-c","python manage.py migrate --noinput && gunicorn wagtailweb.wsgi:application --bind 0.0.0.0:8000"]
